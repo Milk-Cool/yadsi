@@ -26,7 +26,9 @@ Config config;
 void init_config_files() {
     if(!FatFS.exists(CONFIG_NAME)) {
         File f = FatFS.open(CONFIG_NAME, "w");
-        f.write(CONFIG_CONTENTS);
+        String str = CONFIG_CONTENTS;
+        for(unsigned int i = 0; i < str.length(); i += 512)
+            f.write(str.substring(i, i + 512).c_str()); // f.write writes only 512 bytes
         f.close();
     }
 }
