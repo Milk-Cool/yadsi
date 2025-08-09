@@ -63,13 +63,23 @@ void loop() {
             Keyboard.begin();
         }
         
-        String path = "/scripts/" + config.script_name; // TODO: make scripts dir customizable
+        String path = "/" + config.scripts_dir + "/" + config.script_name; // TODO: make scripts dir customizable
         if(!FatFS.exists(path)) throw_error("Script doesn't exist!");
         else {
             File f = FatFS.open(path, "r");
             String code = f.readString();
             f.close();
-            interpret(code);
+            do {
+                interpret(code);
+            } while(config.loop);
+        }
+        if(config.remount) {
+            Keyboard.end();
+            keyboard_init = false;
+
+            FatFSUSB.begin();
+            FatFSUSB.plug();
+            mountable = true;
         }
         is_executing = false;
     }

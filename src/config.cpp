@@ -2,18 +2,29 @@
 #include <FatFS.h>
 #include "files.h"
 
-void parse_config_line(Config& config, String& line) {
+static bool is_true(String value) {
+    value.toLowerCase();
+    return value == "true";
+}
+
+static void parse_config_line(Config& config, String& line) {
     if(line.length() == 0 || line[0] == '#') return;
     int equals = line.indexOf('=');
     if(equals == -1) return;
     String optname = line.substring(0, equals);
     String value = line.substring(equals + 1);
     if(optname == "name") config.script_name = value;
+    else if(optname == "loop") config.loop = is_true(value);
+    else if(optname == "remount") config.remount = is_true(value);
+    else if(optname == "scripts_dir") config.scripts_dir = value;
 }
 
 Config read_config() {
     Config config = {
         .script_name = "",
+        .loop = false,
+        .remount = false,
+        .scripts_dir = "scripts",
     };
 
     File f = FatFS.open(CONFIG_NAME, "r");
