@@ -8,6 +8,7 @@
 bool is_executing = false;
 bool mountable = true;
 bool usb_mounted = false;
+bool keyboard_init = false;
 
 void on_plug(uint32_t) {
     FatFS.end();
@@ -45,6 +46,13 @@ void loop() {
             FatFSUSB.end();
             mountable = false;
         }
+        if(!keyboard_init) {
+            keyboard_init = true;
+            Keyboard.begin();
+        }
+        
+        Keyboard.print("test test ");
+        is_executing = false;
     }
     delay(5);
 }
