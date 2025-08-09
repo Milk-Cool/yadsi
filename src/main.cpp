@@ -4,6 +4,8 @@
 #include <FatFSUSB.h>
 
 #include "files.h"
+#include "config.h"
+#include "interpreter.h"
 
 bool is_executing = false;
 bool mountable = true;
@@ -29,13 +31,23 @@ void init_files() {
         FatFS.mkdir(SCRIPTS_NAME);
 }
 
+Config config;
+
 void setup() {
     Serial.begin(115200);
     FatFS.begin();
     init_files();
+
+    config = read_config();
+
     FatFSUSB.onPlug(on_plug);
     FatFSUSB.onUnplug(on_unplug);
     FatFSUSB.begin();
+}
+
+static void throw_error(String error) {
+    Serial.println("SYSTEM ERROR!!!");
+    Serial.println(error);
 }
 
 void loop() {
@@ -51,7 +63,14 @@ void loop() {
             Keyboard.begin();
         }
         
-        Keyboard.print("test test ");
+        String path = "/scripts/" + config.script_name; // TODO: make scripts dir customizable
+        if(!FatFS.exists(path)) throw_error("Script doesn't exist!");
+        else {
+            File f = FatFS.open(path, "r");
+            String code = f.readString();
+            f.close();
+            interpret(code);
+        }
         is_executing = false;
     }
     delay(5);
