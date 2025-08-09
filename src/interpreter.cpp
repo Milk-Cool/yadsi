@@ -145,7 +145,12 @@ void interpret(String code) {
             String ms_str = read_till_newline(ARGS);
             int ms = ms_str.toInt();
             delay(ms);
-        } 
+        }
+        else if(cmd == "WAIT_FOR_BUTTON_PRESS") while(!BOOTSEL) delay(1);
+        #ifdef LED_BUILTIN
+        else if(cmd == "LED_ON") digitalWrite(LED_BUILTIN, HIGH);
+        else if(cmd == "LED_OFF") digitalWrite(LED_BUILTIN, LOW);
+        #endif
         else if(find(MODIFIERS.begin(), MODIFIERS.end(), cmd) != MODIFIERS.end()) {
             String keys_str = cmd + " " + read_till_newline(ARGS);
             vector<String> keys;

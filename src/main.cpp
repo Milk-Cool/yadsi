@@ -46,6 +46,10 @@ void setup() {
     FatFSUSB.onPlug(on_plug);
     FatFSUSB.onUnplug(on_unplug);
     FatFSUSB.begin();
+
+    #ifdef LED_BUILTIN
+    pinMode(LED_BUILTIN, OUTPUT);
+    #endif
 }
 
 static void throw_error(String error) {
