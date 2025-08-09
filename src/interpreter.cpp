@@ -151,6 +151,13 @@ void interpret(String code) {
         else if(cmd == "LED_ON") digitalWrite(LED_BUILTIN, HIGH);
         else if(cmd == "LED_OFF") digitalWrite(LED_BUILTIN, LOW);
         #endif
+        else if(cmd == "HOLD" || cmd == "RELEASE") {
+            String key = read_till_newline(ARGS);
+            uint8_t keycode;
+            if(NORMAL_KEYS.indexOf(key) != -1) keycode = key[0];
+            else if(KEYS.find(key) != KEYS.end()) keycode = KEYS.at(key);
+            cmd == "HOLD" ? Keyboard.press(keycode) : Keyboard.release(keycode);
+        }
         else if(find(MODIFIERS.begin(), MODIFIERS.end(), cmd) != MODIFIERS.end()) {
             String keys_str = cmd + " " + read_till_newline(ARGS);
             vector<String> keys;
