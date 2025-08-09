@@ -28,6 +28,7 @@ name=
 ```
 
 # supported commands
+
 |command|arguments|description|
 |-|-|-|
 |`STRING`|`<string to type>`|types a string|
