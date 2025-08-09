@@ -21,24 +21,27 @@ void on_unplug(uint32_t) {
     usb_mounted = false;
 }
 
-void init_files() {
+Config config;
+
+void init_config_files() {
     if(!FatFS.exists(CONFIG_NAME)) {
         File f = FatFS.open(CONFIG_NAME, "w");
         f.write(CONFIG_CONTENTS);
         f.close();
     }
-    if(!FatFS.exists(SCRIPTS_NAME))
-        FatFS.mkdir(SCRIPTS_NAME);
 }
-
-Config config;
+void init_scripts_dir() {
+    if(!FatFS.exists("/" + config.scripts_dir))
+        FatFS.mkdir("/" + config.scripts_dir);
+}
 
 void setup() {
     Serial.begin(115200);
     FatFS.begin();
-    init_files();
 
+    init_config_files();
     config = read_config();
+    init_scripts_dir();
 
     FatFSUSB.onPlug(on_plug);
     FatFSUSB.onUnplug(on_unplug);
