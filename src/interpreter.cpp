@@ -158,7 +158,7 @@ void interpret(String code) {
             else if(KEYS.find(key) != KEYS.end()) keycode = KEYS.at(key);
             cmd == "HOLD" ? Keyboard.press(keycode) : Keyboard.release(keycode);
         }
-        else if(find(MODIFIERS.begin(), MODIFIERS.end(), cmd) != MODIFIERS.end()) {
+        else if(KEYS.find(cmd) != KEYS.end()) {
             String keys_str = cmd + " " + read_till_newline(ARGS);
             vector<String> keys;
             String cur_key = "";
