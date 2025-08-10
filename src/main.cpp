@@ -83,6 +83,7 @@ void loop() {
             } while(config.loop);
         }
         if(config.remount) {
+            delay(200);
             Keyboard.end();
             keyboard_init = false;
 
